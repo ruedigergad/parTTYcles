@@ -216,7 +216,7 @@ void* client_refresher(void* client)
 
 void intermediate_shader(TGLTriangle *trig, void *data)
 {
-	TGLVec3 light_direction = {1.f, 0.f, 0.f};
+	TGLVec3 light_direction = {1.f, 1.f, 1.f};
 	TGLTriangle *in = data;
 	TGLVec3 ab, ac, cp;
 	tgl_sub3v(in->vertices[1], in->vertices[0], ab);
