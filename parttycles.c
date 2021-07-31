@@ -237,6 +237,9 @@ void render_particles(runtime_state* state, json_value* json_parsed) {
     float x = 0.0;
     float y = 0.0;
     float z = 0.0;
+    float color_r = 1.0;
+    float color_g = 1.0;
+    float color_b = 1.0;
     float rotation_x = 0.0;
     float rotation_y = 0.0;
     float rotation_z = 0.0;
@@ -258,6 +261,9 @@ void render_particles(runtime_state* state, json_value* json_parsed) {
             if (!strcmp(val.name, "x")) x = (float) val.value->u.dbl;
             if (!strcmp(val.name, "y")) y = (float) val.value->u.dbl;
             if (!strcmp(val.name, "z")) z = (float) val.value->u.dbl;
+            if (!strcmp(val.name, "color_r")) color_r = (float) val.value->u.dbl;
+            if (!strcmp(val.name, "color_g")) color_g = (float) val.value->u.dbl;
+            if (!strcmp(val.name, "color_b")) color_b = (float) val.value->u.dbl;
             if (!strcmp(val.name, "rotation_x")) rotation_x = (float) val.value->u.dbl;
             if (!strcmp(val.name, "rotation_y")) rotation_y = (float) val.value->u.dbl;
             if (!strcmp(val.name, "rotation_z")) rotation_z = (float) val.value->u.dbl;
@@ -265,6 +271,16 @@ void render_particles(runtime_state* state, json_value* json_parsed) {
             if (!strcmp(val.name, "scale_y")) scale_y = (float) val.value->u.dbl;
             if (!strcmp(val.name, "scale_z")) scale_z = (float) val.value->u.dbl;
         }
+
+        int color = TGL_WHITE;
+        float color_threshold = 0.3f;
+        if (color_r > color_threshold && color_g < color_threshold && color_b < color_threshold) color = TGL_RED;
+        else if (color_r < color_threshold && color_g > color_threshold && color_b < color_threshold) color = TGL_GREEN;
+        else if (color_r < color_threshold && color_g < color_threshold && color_b > color_threshold) color = TGL_BLUE;
+        else if (color_r > color_threshold && color_g < color_threshold && color_b > color_threshold) color = TGL_PURPLE;
+        else if (color_r < color_threshold && color_g > color_threshold && color_b > color_threshold) color = TGL_CYAN;
+        else if (color_r > color_threshold && color_g > color_threshold && color_b < color_threshold) color = TGL_YELLOW;
+        else if (color_r < color_threshold && color_g < color_threshold && color_b < color_threshold) color = TGL_BLACK;
 
         for (int j=0; j < n_particle_obj_triangles; j++) {
             tgl3d_transform_translate(&transform, x, y, z);
@@ -276,7 +292,7 @@ void render_particles(runtime_state* state, json_value* json_parsed) {
             tgl3d_transform_apply(&transform, particle_obj_triangles[j].vertices, temp.vertices);
             memset(temp.intensity, 255, 3);
 
-            tgl3d_shader(tgl, &temp, TGL_WHITE, true, &temp, &intermediate_shader);
+            tgl3d_shader(tgl, &temp, color, true, &temp, &intermediate_shader);
         }
     }
 
