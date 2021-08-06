@@ -61,7 +61,7 @@ int main(int argc, const char *argv[])
 
     /* get the topic name to publish */
     if (argc > 3) topic = argv[3];
-    else topic = "aframe";
+    else topic = "bowerick/message/generator";
 
     /* open the non-blocking TCP socket (connecting to the broker) */
     int sockfd = open_nb_socket(addr, port);
